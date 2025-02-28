@@ -45,6 +45,7 @@ plt.tight_layout()
 plt.show()
 
 #Chatgpt
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -54,9 +55,10 @@ def dft(x):
     :param x: Input signal (list or numpy array)
     :return: Frequency domain representation X[k]
     """
-    N = len(x)
+    N = len(x)  # Number of samples
     X = np.zeros(N, dtype=complex)  # Initialize output array
     
+    # Compute DFT using the formula
     for k in range(N):  # Loop for each frequency component
         for n in range(N):  # Loop for each input sample
             X[k] += x[n] * np.exp(-2j * np.pi * k * n / N)  # Apply DFT formula
@@ -64,15 +66,25 @@ def dft(x):
     return X
 
 # Example Usage
-x = [1, 2, 3, 4]  # Input signal
+x = [1, 2, 3, 4, 3, 2, 1, 0]  # Input signal
 X = dft(x)  # Compute DFT
-print("DFT Output:", X)
 
-# Plot Magnitude Spectrum
-plt.stem(np.abs(X))
-plt.xlabel('Frequency Index')
+# Plot Input Signal (Time Domain)
+plt.figure(figsize=(12, 5))
+plt.subplot(1, 2, 1)
+plt.stem(x, use_line_collection=True)
+plt.xlabel('Time (n)')
+plt.ylabel('Amplitude')
+plt.title('Input Signal (Time Domain)')
+
+# Plot Magnitude Spectrum (Frequency Domain)
+plt.subplot(1, 2, 2)
+plt.stem(np.abs(X), use_line_collection=True)
+plt.xlabel('Frequency Index (k)')
 plt.ylabel('Magnitude')
 plt.title('DFT Magnitude Spectrum')
+
+plt.tight_layout()
 plt.show()
 
 
