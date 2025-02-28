@@ -130,5 +130,68 @@ plt.ylabel("Amplitude")
 plt.legend()
 plt.grid()
 
+#blacbox
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.signal import butter, filtfilt, find_peaks
+
+# Generate synthetic PPG signal for demonstration
+def generate_ppg_signal(duration=10, fs=1000):
+    t = np.linspace(0, duration, duration * fs)
+    # Simulate a PPG signal with noise
+    ppg = 0.5 * (1 + np.sin(2 * np.pi * 1 * t)) + 0.05 * np.random.normal(size=t.shape)
+    return t, ppg
+
+# Butterworth filter design
+def butter_filter(data, lowcut, highcut, fs, order=5):
+    nyquist = 0.5 * fs
+    low = lowcut / nyquist
+    high = highcut / nyquist
+    b, a = butter(order, [low, high], btype='band')
+    return filtfilt(b, a, data)
+
+# Feature extraction: Calculate heart rate
+def calculate_heart_rate(peaks, fs):
+    if len(peaks) < 2:
+        return 0
+    intervals = np.diff(peaks) / fs  # Convert to seconds
+    heart_rate = 60 / np.mean(intervals)  # BPM
+    return heart_rate
+
+# Main function
+if __name__ == "__main__":
+    # Generate synthetic PPG signal
+    fs = 1000  # Sampling frequency
+    t, ppg_signal = generate_ppg_signal(duration=10, fs=fs)
+
+    # Filter the PPG signal
+    lowcut = 0.5  # Low cutoff frequency
+    highcut = 5.0  # High cutoff frequency
+    filtered_ppg = butter_filter(ppg_signal, lowcut, highcut, fs)
+
+    # Peak detection
+    peaks, _ = find_peaks(filtered_ppg, height=0.1, distance=fs/2.5)  # Adjust parameters as needed
+
+    # Feature extraction: Calculate heart rate
+    heart_rate = calculate_heart_rate(peaks, fs)
+
+    # Plotting the results
+    plt.figure(figsize=(12, 8))
+
+    # Original PPG signal
+    plt.subplot(3, 1, 1)
+    plt.plot(t, ppg_signal, label='Original PPG Signal', color='blue')
+    plt.title('Original PPG Signal')
+    plt.xlabel('Time [s]')
+    plt.ylabel('Amplitude')
+    plt.grid()
+
+    # Filtered PPG signal
+    plt.subplot(3, 1, 2)
+    plt.plot(t, filtered_ppg, label='Filtered PPG Signal', color='green')
+    plt.plot(t[peaks], filtered_ppg[peaks], "x", label='Detected Peaks', color='red')
+    plt.title('Filtered PPG Signal with Detected Peaks
+
 plt.tight_layout()
 plt.show()
