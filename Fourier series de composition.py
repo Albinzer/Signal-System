@@ -161,3 +161,60 @@ if __name__ == "__main__":
     plt.xlim(0, T)
     plt.tight_layout()
     plt.show()
+
+#rafi
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import quad
+
+# Define the periodic function
+def f(x):
+    return np.sign(np.sin(x))  # Change this to any periodic function
+
+# Define the period
+L = np.pi  # Half-period
+
+# Compute Fourier coefficients
+def a0():
+    return (1 / L) * quad(f, -L, L)[0]
+
+def an(n):
+    return (1 / L) * quad(lambda x: f(x) * np.cos(n * np.pi * x / L), -L, L)[0]
+
+def bn(n):
+    return (1 / L) * quad(lambda x: f(x) * np.sin(n * np.pi * x / L), -L, L)[0]
+
+# Fourier series approximation
+def fourier_series(x, N):
+    sum_series = a0() / 2
+    for n in range(1, N + 1):
+        sum_series += an(n) * np.cos(n * np.pi * x / L) + bn(n) * np.sin(n * np.pi * x / L)
+    return sum_series
+
+# Increase number of points for smoothness
+x_vals = np.linspace(-L, L, 1000)  
+y_original = np.vectorize(f)(x_vals)
+
+plt.figure(figsize=(10, 5))
+plt.plot(x_vals, y_original, label="Original Function", color='black', linewidth=2)
+
+# Define strong contrast colors
+colors = ['r', 'b', 'g', 'm']
+linestyles = ['-', '--', '-.', ':']
+alphas = [0.9, 0.7, 0.5, 0.4]  # Different transparency levels
+
+# Fourier approximations for different N
+N_values = [1, 5, 10, 20]
+for i, N in enumerate(N_values):
+    y_fourier = np.vectorize(lambda x: fourier_series(x, N))(x_vals)
+    plt.plot(x_vals, y_fourier, label=f"Fourier Approx (N={N})", 
+             color=colors[i % len(colors)], linestyle=linestyles[i % len(linestyles)], alpha=alphas[i])
+
+plt.legend()
+plt.title("Improved Fourier Series Decomposition")
+plt.xlabel("x")
+plt.ylabel("f(x)")
+plt.grid()
+plt.show()
+
