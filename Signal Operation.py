@@ -27,48 +27,53 @@ mul_signal = x * y  # Multiplication
 div_signal = np.divide(x, y, out=np.zeros_like(x, dtype=float), where=y != 0)  # Avoid divide by zero
 
 # Plot Signals
-plt.figure(figsize=(12, 8))
+plt.figure(figsize=(12, 10))  # Increased figure size to accommodate 10 subplots
 
 # Original Signal
-plt.subplot(3, 3, 1)
+plt.subplot(4, 3, 1)
 plt.stem(n, x, basefmt="k", use_line_collection=True)
 plt.title("Original Signal x(n)")
 
 # Time Shifting
-plt.subplot(3, 3, 2)
+plt.subplot(4, 3, 2)
 plt.stem(n, shift_right, basefmt="k", use_line_collection=True)
 plt.title("Right Shift (x(n-2))")
 
-plt.subplot(3, 3, 3)
+plt.subplot(4, 3, 3)
 plt.stem(n, shift_left, basefmt="k", use_line_collection=True)
 plt.title("Left Shift (x(n+2))")
 
 # Time Scaling
-plt.subplot(3, 3, 4)
+plt.subplot(4, 3, 4)
 plt.stem(n_compress, scale_compress, basefmt="k", use_line_collection=True)
 plt.title("Compressed Signal (x(n) downsampled)")
 
-plt.subplot(3, 3, 5)
+plt.subplot(4, 3, 5)
 plt.stem(n_expand, scale_expand, basefmt="k", use_line_collection=True)
 plt.title("Expanded Signal (x(n) upsampled)")
 
 # Time Folding
-plt.subplot(3, 3, 6)
+plt.subplot(4, 3, 6)
 plt.stem(n, folded_signal, basefmt="k", use_line_collection=True)
 plt.title("Folded Signal x(-n)")
 
 # Arithmetic Operations
-plt.subplot(3, 3, 7)
+plt.subplot(4, 3, 7)
 plt.stem(n, add_signal, basefmt="k", use_line_collection=True)
 plt.title("Addition: x(n) + y(n)")
 
-plt.subplot(3, 3, 8)
+plt.subplot(4, 3, 8)
 plt.stem(n, sub_signal, basefmt="k", use_line_collection=True)
 plt.title("Subtraction: x(n) - y(n)")
 
-plt.subplot(3, 3, 9)
+plt.subplot(4, 3, 9)
 plt.stem(n, mul_signal, basefmt="k", use_line_collection=True)
 plt.title("Multiplication: x(n) * y(n)")
+
+# Division plot (added the 10th subplot)
+plt.subplot(4, 3, 10)
+plt.stem(n, div_signal, basefmt="k", use_line_collection=True)
+plt.title("Division: x(n) / y(n)")
 
 plt.tight_layout()
 plt.show()
